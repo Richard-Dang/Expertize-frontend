@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import Home from "./components/Home";
-import Signup from "./components/Signup";
+import SignupForm from "./components/SignupForm";
 import LoginForm from "./components/LoginForm";
 import LoggedIn from "./components/LoggedIn";
 import { useQuery } from "@apollo/client";
@@ -20,7 +20,7 @@ function App() {
 
       <Switch>
         <Route path="/signup">
-          <Signup />
+          <SignupForm />
         </Route>
         <Route path="/login">
           <LoginForm />

@@ -3,8 +3,7 @@ import { useMutation } from "@apollo/client";
 import { LOGIN } from "../mutations";
 import useField from "../hooks/useField";
 import { useHistory } from "react-router-dom";
-import { CURRENT_USER } from "../queries";
-import { useApolloClient } from "@apollo/client";
+import useAuthData from "../hooks/useAuthData";
 
 const Login = () => {
   const history = useHistory();
@@ -18,21 +17,15 @@ const Login = () => {
   });
   const { reset: resetEmail, ...emailInput } = useField("text");
   const { reset: resetPassword, ...passwordInput } = useField("password");
-  const client = useApolloClient();
+  const authData = useAuthData(loginData);
 
   useEffect(() => {
-    if (loginData) {
-      const { token, currentUser } = loginData.login;
-      localStorage.setItem("expertize-user-token", token);
-      client.writeQuery({
-        query: CURRENT_USER,
-        data: { currentUser },
-      });
+    if (authData) {
+      history.push("/");
       resetEmail();
       resetPassword();
-      history.push("/");
     }
-  }, [loginData]); // eslint-disable-line
+  }, [authData]); // eslint-disable-line
 
   const handleSignup = (event) => {
     event.preventDefault();

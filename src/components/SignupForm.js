@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { SIGNUP } from "../mutations";
 import useField from "../hooks/useField";
+import useAuthData from "../hooks/useAuthData";
+import { useHistory } from "react-router-dom";
 
 const Signup = () => {
   const [signup, { data: signupData }] = useMutation(SIGNUP, {
@@ -16,17 +18,18 @@ const Signup = () => {
   const { reset: resetPassword, ...passwordInput } = useField("password");
   const { reset: resetEmail, ...emailInput } = useField("text");
   const { reset: resetName, ...nameInput } = useField("text");
+  const authData = useAuthData(signupData);
+  const history = useHistory();
 
   useEffect(() => {
-    if (signupData) {
-      const token = signupData.signup.token;
-      localStorage.setItem("expertize-user-token", token);
+    if (authData) {
+      history.push("/");
       resetUsername();
       resetPassword();
       resetEmail();
       resetName();
     }
-  }, [signupData]); // eslint-disable-line
+  }, [authData]); // eslint-disable-line
 
   const handleSignup = (event) => {
     event.preventDefault();
