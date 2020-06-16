@@ -2,22 +2,31 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Signup from "./components/Signup";
-import Login from "./components/Login";
+import LoginForm from "./components/LoginForm";
+import LoggedIn from "./components/LoggedIn";
+import { useQuery } from "@apollo/client";
+import { CURRENT_USER } from "./queries";
 import Menu from "./components/Menu";
 
 function App() {
-  return (
+  const { loading: currentUserLoading, data: currentUserData } = useQuery(
+    CURRENT_USER
+  );
+
+  return currentUserLoading ? null : (
     <div>
       <Menu />
+      {currentUserData.currentUser ? <LoggedIn /> : <Home />}
+
       <Switch>
-        <Route path="/home">
-          <Home />
-        </Route>
         <Route path="/signup">
           <Signup />
         </Route>
         <Route path="/login">
-          <Login />
+          <LoginForm />
+        </Route>
+        <Route path="/">
+          <Home />
         </Route>
       </Switch>
     </div>

@@ -6,7 +6,6 @@ export const ALL_USERS = gql`
       name
       username
       email
-      resumes
     }
   }
 `;
@@ -21,6 +20,16 @@ export const ALL_RESUMES = gql`
       description
       tags
       user
+    }
+  }
+`;
+
+export const CURRENT_USER = gql`
+  query currentUser {
+    currentUser {
+      name
+      username
+      email
     }
   }
 `;

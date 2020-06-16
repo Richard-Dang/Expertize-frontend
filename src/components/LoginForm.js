@@ -2,8 +2,12 @@ import React, { useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { LOGIN } from "../mutations";
 import useField from "../hooks/useField";
+import { useHistory } from "react-router-dom";
+import { CURRENT_USER } from "../queries";
+import { useApolloClient } from "@apollo/client";
 
 const Login = () => {
+  const history = useHistory();
   const [login, { data: loginData }] = useMutation(LOGIN, {
     onError: (error) => {
       if (error) {
@@ -14,13 +18,19 @@ const Login = () => {
   });
   const { reset: resetEmail, ...emailInput } = useField("text");
   const { reset: resetPassword, ...passwordInput } = useField("password");
+  const client = useApolloClient();
 
   useEffect(() => {
     if (loginData) {
-      const token = loginData.login.token;
+      const { token, currentUser } = loginData.login;
       localStorage.setItem("expertize-user-token", token);
+      client.writeQuery({
+        query: CURRENT_USER,
+        data: { currentUser },
+      });
       resetEmail();
       resetPassword();
+      history.push("/");
     }
   }, [loginData]); // eslint-disable-line
 
